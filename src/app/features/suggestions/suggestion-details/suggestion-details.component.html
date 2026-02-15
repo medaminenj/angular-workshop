@@ -1,0 +1,31 @@
+<div class="page-container" *ngIf="suggestion; else notFound">
+
+  <div class="card">
+    <h2>{{ suggestion.title }}</h2>
+    
+    <div class="meta">
+      <span class="category">{{ suggestion.category }}</span>
+      <span class="date">{{ suggestion.date | date:'dd/MM/yyyy' }}</span>
+    </div>
+
+    <p class="description">
+      {{ suggestion.description }}
+    </p>
+
+    <div class="status-container">
+      Statut : <strong>{{ suggestion.status }}</strong>
+    </div>
+
+    <div class="actions">
+      <a routerLink="/suggestions" class="btn-back">
+        ⬅ Back to list
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<ng-template #notFound>
+  <p>Suggestion introuvable.</p>
+  <a routerLink="/suggestions">Retour à la liste</a>
+</ng-template>
