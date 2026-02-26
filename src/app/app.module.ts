@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';   // ✅ for ngModel
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './core/home/home.component';
 import { NotfoundComponent } from './core/notfound/notfound.component'; // ✅ for ngIf, ngFor
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,9 +23,9 @@ import { NotfoundComponent } from './core/notfound/notfound.component'; // ✅ f
   ],
   imports: [
     BrowserModule,
+    
     AppRoutingModule,
-    FormsModule,   // ✅ for ngModel
-    CommonModule   // ✅ for ngIf, ngFor
+   // ✅ for ngIf, ngFor
   ],
   providers: [],
   bootstrap: [AppComponent]

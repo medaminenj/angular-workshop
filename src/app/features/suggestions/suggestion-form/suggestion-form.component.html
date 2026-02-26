@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter une suggestion</title>
+  <link rel="stylesheet" href="suggestion-form.css">
+</head>
+<body>
+<div class="card">
+  <h2>Ajouter une suggestion</h2>
+
+  <div class="field" id="field-titre">
+    <label for="titre">Titre :</label>
+    <input type="text" id="titre" autocomplete="off">
+    <div class="error" id="err-titre"></div>
+  </div>
+
+  <div class="field" id="field-description">
+    <label for="description">Description :</label>
+    <textarea id="description"></textarea>
+    <div class="error" id="err-description"></div>
+  </div>
+
+  <div class="field" id="field-categorie">
+    <label for="categorie">Catégorie :</label>
+    <select id="categorie">
+      <option value="">-- Sélectionnez une catégorie --</option>
+      <option value="tech">Technologie</option>
+      <option value="design">Design</option>
+      <option value="rh">Ressources humaines</option>
+      <option value="autre">Autre</option>
+    </select>
+    <div class="error" id="err-categorie"></div>
+  </div>
+
+  <div class="field readonly-field">
+    <label for="date">Date :</label>
+    <input type="text" id="date" readonly>
+  </div>
+
+  <div class="field readonly-field">
+    <label for="status">Status :</label>
+    <input type="text" id="status" value="en attente" readonly>
+  </div>
+
+  <button type="button" id="btn-soumettre">Soumettre</button>
+</div>
+
+<script>
+  window.onload = function () {
+    // Fill date field
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    document.getElementById('date').value = dd + '/' + mm + '/' + yyyy;
+
+    // Submit handler
+    document.getElementById('btn-soumettre').addEventListener('click', function () {
+      if (validate()) {
+        alert('Suggestion soumise avec succès !');
+      }
+    });
+  };
+
+  function showError(fieldId, errorId, message) {
+    var field = document.getElementById(fieldId);
+    var err = document.getElementById(errorId);
+    field.classList.add('invalid');
+    err.textContent = message;
+    err.style.display = 'block';
+  }
+
+  function clearError(fieldId, errorId) {
+    var field = document.getElementById(fieldId);
+    var err = document.getElementById(errorId);
+    field.classList.remove('invalid');
+    err.textContent = '';
+    err.style.display = 'none';
+  }
+
+  function validate() {
+    var valid = true;
+
+    // Titre
+    var titre = document.getElementById('titre').value.trim();
+    if (!titre) {
+      showError('field-titre', 'err-titre', 'Titre obligatoire.');
+      valid = false;
+    } else if (titre.length < 5) {
+      showError('field-titre', 'err-titre', 'Titre trop court (min 5 caractères).');
+      valid = false;
+    } else if (!/^[A-ZÀÂÄÉÈÊËÎÏÔÙÛÜÇ]/.test(titre)) {
+      showError('field-titre', 'err-titre', 'Le titre doit commencer par une majuscule.');
+      valid = false;
+    } else {
+      clearError('field-titre', 'err-titre');
+    }
+
+    // Description
+    var desc = document.getElementById('description').value.trim();
+    if (desc.length < 30) {
+      showError('field-description', 'err-description', 'Description min 30 caractères (actuellement ' + desc.length + ').');
+      valid = false;
+    } else {
+      clearError('field-description', 'err-description');
+    }
+
+    // Catégorie
+    var cat = document.getElementById('categorie').value;
+    if (!cat) {
+      showError('field-categorie', 'err-categorie', 'Catégorie obligatoire.');
+      valid = false;
+    } else {
+      clearError('field-categorie', 'err-categorie');
+    }
+
+    return valid;
+  }
+</script>
+</body>
+</html>
