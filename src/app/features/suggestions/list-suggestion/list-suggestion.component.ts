@@ -1,68 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Suggestion } from '../../../models/suggestion';
+import { SuggestionService } from '../../../core/services/suggestion.service';
 
 @Component({
   selector: 'app-list-suggestion',
   templateUrl: './list-suggestion.component.html',
   styleUrls: ['./list-suggestion.component.css']
 })
-export class ListSuggestionComponent {
+export class ListSuggestionComponent implements OnInit {
 
   searchText: string = '';
+  suggestions: Suggestion[] = [];
 
-  suggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: 'Suggestion pour organiser une journée de team building.',
-      category: 'Événements',
-      date: new Date('2025-01-20'),
-      status: 'acceptee',
-      nbLikes: 12
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Proposition pour améliorer la gestion des réservations.',
-      category: 'Technologie',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 3,
-      title: 'Créer un système de récompenses',
-      description: 'Mise en place d\'un programme de récompenses pour motiver les employés et reconnaître leurs efforts.',
-      category: 'Ressources Humaines',
-      date: new Date('2025-01-25'),
-      status: 'refusee',
-      nbLikes: 0
-    },
+  constructor(private suggestionService: SuggestionService) {}
 
-    {
-      id: 4,
-      title: 'Moderniser l\'interface utilisateur',
-      description: 'Refonte complète de l\'interface utilisateur pour une meilleure expérience utilisateur.',
-      category: 'Technologie',
-      date: new Date('2025-01-30'),
-      status: 'en_attente',
-      nbLikes: 0
-    }
-  ];
+  ngOnInit(): void {
+    this.loadSuggestions();
+  }
 
-  filteredSuggestions() {
+  loadSuggestions(): void {
+    this.suggestionService.getSuggestionsList().subscribe({
+      next: (data) => this.suggestions = data,
+      error: (err) => console.error(err)
+    });
+  }
+
+  filteredSuggestions(): Suggestion[] {
     if (!this.searchText) return this.suggestions;
-
+    const text = this.searchText.toLowerCase();
     return this.suggestions.filter(s =>
-      s.title.toLowerCase().includes(this.searchText.toLowerCase())
+      s.title.toLowerCase().includes(text) ||
+      s.category.toLowerCase().includes(text)
     );
   }
 
-  likeSuggestion(s: Suggestion) {
+  likeSuggestion(s: Suggestion): void {
     s.nbLikes++;
+    this.suggestionService.likeSuggestion(s).subscribe({
+      error: (err) => {
+        s.nbLikes--;
+        console.error(err);
+      }
+    });
   }
 
-  addToFavorites(s: Suggestion) {
+  deleteSuggestion(id: number): void {
+    this.suggestionService.deleteSuggestion(id).subscribe({
+      next: () => {
+        this.suggestions = this.suggestions.filter(s => s.id !== id);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  addToFavorites(s: Suggestion): void {
     console.log('Ajouté aux favoris:', s.title);
   }
 }

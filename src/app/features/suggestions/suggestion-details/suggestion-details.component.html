@@ -2,24 +2,34 @@
 
   <div class="card">
     <h2>{{ suggestion.title }}</h2>
-    
+
     <div class="meta">
       <span class="category">{{ suggestion.category }}</span>
       <span class="date">{{ suggestion.date | date:'dd/MM/yyyy' }}</span>
     </div>
 
-    <p class="description">
-      {{ suggestion.description }}
-    </p>
+    <p class="description">{{ suggestion.description }}</p>
 
     <div class="status-container">
       Statut : <strong>{{ suggestion.status }}</strong>
     </div>
 
+    <!-- ✅ Added nbLikes display -->
+    <div class="likes">
+      👍 {{ suggestion.nbLikes }} likes
+    </div>
+
     <div class="actions">
-      <a routerLink="/suggestions" class="btn-back">
-        ⬅ Back to list
-      </a>
+
+      <!-- ✅ Back to list -->
+      <button class="btn-back" (click)="goBack()">⬅ Back to list</button>
+
+      <!-- ✅ Update button (step 13) — navigates to form with id -->
+      <button class="btn-update" (click)="goToUpdate()">✏️ Update</button>
+
+      <!-- ✅ Delete button (step 9) — deletes and redirects to list -->
+      <button class="btn-delete" (click)="deleteSuggestion()">🗑️ Supprimer</button>
+
     </div>
   </div>
 
@@ -27,5 +37,5 @@
 
 <ng-template #notFound>
   <p>Suggestion introuvable.</p>
-  <a routerLink="/suggestions">Retour à la liste</a>
+  <button (click)="goBack()">Retour à la liste</button>
 </ng-template>

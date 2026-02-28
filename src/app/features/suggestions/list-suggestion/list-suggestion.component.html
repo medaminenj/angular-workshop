@@ -2,6 +2,8 @@
 
   <h2 class="title">Liste des suggestions</h2>
 
+  <button class="add-btn" routerLink="/suggestions/add">➕ Ajouter suggestion</button>
+
   <input
     type="text"
     placeholder="Rechercher une suggestion"
@@ -18,9 +20,7 @@
       <span class="date">{{ s.date | date:'dd MMM yyyy' }}</span>
     </div>
 
-    <p class="description">
-      {{ s.description }}
-    </p>
+    <p class="description">{{ s.description }}</p>
 
     <span
       class="status"
@@ -32,6 +32,8 @@
     >
       {{ s.status }}
     </span>
+
+    <button class="delete-btn" (click)="deleteSuggestion(s.id)">🗑️ Supprimer</button>
 
     <div class="actions" *ngIf="s.status !== 'refusee'">
 
@@ -46,7 +48,6 @@
       <button class="fav-btn" (click)="addToFavorites(s)">
         🤍 Ajouter aux favoris
       </button>
-      <button routerLink="/suggestions/add">Ajouter suggestion</button>
 
     </div>
 
